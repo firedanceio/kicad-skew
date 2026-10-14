@@ -1,0 +1,5 @@
+{
+  "_comment": "A USB 2.0 pair: legs within 5 ps (about 0.8 mm on FR4 stripline).",
+  "measure": ["USB_D*"],
+  "rules": [{"type": "pairs", "label": "USB P/N", "match": "^USB_DP$", "p": "USB_DP", "n": "USB_DM", "max": 0.8}]
+}

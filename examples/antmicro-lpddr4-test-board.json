@@ -1,0 +1,12 @@
+{
+  "_comment": "Antmicro lpddr4-test-board (github.com/antmicro/lpddr4-test-board), LPDDR4 channel A, x16. Pair and DQS-CK limits as in lpddr4-rockchip.json (12 mil, 1200 mil); byte lanes and CA held to 1 mm.",
+  "measure": ["DQ*", "DMI*", "CA*", "CKE0_A", "CS0_A", "CK_A_*"],
+  "rules": [
+    {"type": "pairs", "label": "P/N", "match": "^(CK_A|DQ_S\\d)_P$", "p": "_P", "n": "_N", "max": 0.3048},
+    {"type": "group", "label": "byte 0", "members": ["^DQ0[0-7]_A$", "^DMI_0A$"], "reference": ["^DQ_S0_[PN]$"], "max": 1.0},
+    {"type": "group", "label": "byte 1", "members": ["^DQ(0[89]|1[0-5])_A$", "^DMI_1A$"], "reference": ["^DQ_S1_[PN]$"], "max": 1.0},
+    {"type": "group", "label": "CA vs CK", "members": ["^CA", "^CKE0_A$", "^CS0_A$"], "reference": ["^CK_A_[PN]$"], "max": 1.0},
+    {"type": "between", "label": "DQS0 vs CK", "a": ["^DQ_S0_[PN]$"], "b": ["^CK_A_[PN]$"], "max": 30.48},
+    {"type": "between", "label": "DQS1 vs CK", "a": ["^DQ_S1_[PN]$"], "b": ["^CK_A_[PN]$"], "max": 30.48}
+  ]
+}

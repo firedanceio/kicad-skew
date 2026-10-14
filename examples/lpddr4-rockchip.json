@@ -1,0 +1,19 @@
+{
+  "_comment": "LPDDR4 x32 (channels A/B) to Rockchip RK3568 High Speed PCB Design Guide tables 33/34 limits. Edit the net names to match your schematic.",
+  "measure": ["LPDDR4_*"],
+  "exclude": ["LPDDR4_ZQ*", "LPDDR4_RESETn"],
+  "unit": "mil",
+  "rules": [
+    {"type": "pairs", "label": "P/N", "match": "^LPDDR4_(CLK|DQS\\d)_[AB]_P$", "p": "_P", "n": "_N", "max": 12},
+    {"type": "group", "label": "DQ-DQS A0", "members": ["^LPDDR4_DQ[0-7]_A$", "^LPDDR4_DM0_A$"], "reference": ["^LPDDR4_DQS0_A_[PN]$"], "max": 600},
+    {"type": "group", "label": "DQ-DQS A1", "members": ["^LPDDR4_DQ([89]|1[0-5])_A$", "^LPDDR4_DM1_A$"], "reference": ["^LPDDR4_DQS1_A_[PN]$"], "max": 600},
+    {"type": "group", "label": "DQ-DQS B0", "members": ["^LPDDR4_DQ[0-7]_B$", "^LPDDR4_DM0_B$"], "reference": ["^LPDDR4_DQS0_B_[PN]$"], "max": 600},
+    {"type": "group", "label": "DQ-DQS B1", "members": ["^LPDDR4_DQ([89]|1[0-5])_B$", "^LPDDR4_DM1_B$"], "reference": ["^LPDDR4_DQS1_B_[PN]$"], "max": 600},
+    {"type": "group", "label": "CA-CK A", "members": ["^LPDDR4_(A\\d|CKE\\d|CS\\dn|ODT\\d_CA)_A$"], "reference": ["^LPDDR4_CLK_A_[PN]$"], "max": 500},
+    {"type": "group", "label": "CA-CK B", "members": ["^LPDDR4_(A\\d|CKE\\d|CS\\dn|ODT\\d_CA)_B$"], "reference": ["^LPDDR4_CLK_B_[PN]$"], "max": 500},
+    {"type": "between", "label": "DQS0-CK A", "a": ["^LPDDR4_DQS0_A_[PN]$"], "b": ["^LPDDR4_CLK_A_[PN]$"], "max": 1200},
+    {"type": "between", "label": "DQS1-CK A", "a": ["^LPDDR4_DQS1_A_[PN]$"], "b": ["^LPDDR4_CLK_A_[PN]$"], "max": 1200},
+    {"type": "between", "label": "DQS0-CK B", "a": ["^LPDDR4_DQS0_B_[PN]$"], "b": ["^LPDDR4_CLK_B_[PN]$"], "max": 1200},
+    {"type": "between", "label": "DQS1-CK B", "a": ["^LPDDR4_DQS1_B_[PN]$"], "b": ["^LPDDR4_CLK_B_[PN]$"], "max": 1200}
+  ]
+}

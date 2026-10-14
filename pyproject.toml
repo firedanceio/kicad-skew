@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kicad-skew"
+version = "0.1.0"
+description = "Length and skew checks on KiCad's own routed lengths (via barrels included), with pair layer-parity checks."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Firedance" }]
+requires-python = ">=3.9"
+dependencies = []
+optional-dependencies = { test = ["pytest>=7"] }
+keywords = ["kicad", "pcb", "length matching", "skew", "ddr", "signal integrity"]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+]
+
+[project.urls]
+Homepage = "https://github.com/firedanceio/kicad-skew"
+
+[project.scripts]
+kicad-skew = "kicad_skew.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
