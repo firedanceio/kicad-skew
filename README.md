@@ -63,6 +63,15 @@ thick), so nothing else is hiding in it. Matching on track length alone would ha
 
 ![kicad-skew map of the Antmicro DDR4 tester's memory channel](docs/antmicro-ddr4-tester-skew.png)
 
+## Side by side
+
+<table>
+<tr><th>Antmicro LPDDR4 test board: x16 channel</th><th>Antmicro DDR4 tester: 72-bit channel</th></tr>
+<tr><td><img src="docs/antmicro-lpddr4-skew.png" alt="kicad-skew map of the LPDDR4 channel"></td>
+<td><img src="docs/antmicro-ddr4-tester-skew.png" alt="kicad-skew map of the DDR4 channel"></td></tr>
+<tr><td>31 relations, all pass; DQS1 pair amber at 80 % of its 12 mil limit</td><td>116 relations, all pass; worst at 25 % of its limit</td></tr>
+</table>
+
 ## Why we wrote it
 
 KiCad's own DRC skew rules only check the spread inside a group. On an LPDDR4 layout we also had to check DQ against
