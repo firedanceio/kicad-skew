@@ -11,7 +11,7 @@ within 1200 mil of the clock.
 
 ```bash
 git clone https://github.com/antmicro/lpddr4-test-board
-kicad-skew lpddr4-test-board/lpddr4-test-board.kicad_pcb examples/antmicro-lpddr4-test-board.json --layers
+kicad-skew lpddr4-test-board/lpddr4-test-board.kicad_pcb examples/antmicro-lpddr4-test-board.json --layers --map skew.png
 ```
 
 ```
@@ -27,7 +27,10 @@ PASS: 0 of 31 relations out of tolerance; 0 pairs split across layers
 
 Antmicro tuned this one tightly: every byte lane is within 0.14 mm of its strobe and the command/address group within
 0.01 mm of the clock, measured the way KiCad measures. The strobes sit about 11 mm short of the clock, which LPDDR4's
-write leveling absorbs.
+write leveling absorbs. With `--map`, every measured net is drawn on the board in the colour of its worst relation;
+the amber pair is DQS1, whose legs differ by 0.24 mm (80 % of the 12 mil limit):
+
+![kicad-skew map of the Antmicro LPDDR4 channel](docs/antmicro-lpddr4-skew.png)
 
 ## Why we wrote it
 
@@ -74,6 +77,9 @@ usual install locations. The `--layers` check also needs KiCad's `pcbnew` module
 ```bash
 "/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3" -m kicad_skew board.kicad_pcb rules.json --layers
 ```
+
+`--map out.png` draws the measured nets on the board, coloured by their worst relation (needs Pillow). It zooms to
+the measured nets; `--map-full` shows the whole board.
 
 Exit status: 0 everything within tolerance, 1 a failure or a split pair, 2 an error.
 

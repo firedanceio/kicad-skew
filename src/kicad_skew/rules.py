@@ -24,7 +24,7 @@ reported as missing (an unrouted net is a failure, not a pass).
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 MIL = 0.0254
 
@@ -37,6 +37,7 @@ class Relation:
     value: float | None  # mm; None when a net is missing
     limit: float       # mm
     missing: list[str]
+    nets: list[str] = field(default_factory=list)   # every net the relation involves
 
     @property
     def ok(self) -> bool:
@@ -65,24 +66,24 @@ def evaluate(cfg: dict, lengths: dict[str, float], all_nets: list[str] | None = 
             for pn in _sel(universe, [r["match"]]):
                 nn = pn[: len(pn) - len(r["p"])] + r["n"] if pn.endswith(r["p"]) else pn.replace(r["p"], r["n"])
                 miss = [x for x in (pn, nn) if x not in lengths]
-                out.append(Relation(label, kind, f"{pn} vs {nn}", None if miss else lengths[nn] - lengths[pn], lim, miss))
+                out.append(Relation(label, kind, f"{pn} vs {nn}", None if miss else lengths[nn] - lengths[pn], lim, miss, [pn, nn]))
         elif kind == "group":
             mem, ref = _sel(universe, r["members"]), _sel(universe, r["reference"])
             rmiss = [x for x in ref if x not in lengths]
             for m in mem:
                 miss = rmiss + ([m] if m not in lengths else [])
                 val = None if (miss or not ref) else lengths[m] - mean(ref)
-                out.append(Relation(label, kind, f"{m} vs mean({', '.join(ref)})", val, lim, miss or ([] if ref else ["(no reference net)"])))
+                out.append(Relation(label, kind, f"{m} vs mean({', '.join(ref)})", val, lim, miss or ([] if ref else ["(no reference net)"]), [m] + ref))
         elif kind == "spread":
             mem = _sel(universe, r["members"])
             miss = [x for x in mem if x not in lengths]
             got = [lengths[x] for x in mem if x in lengths]
-            out.append(Relation(label, kind, f"spread of {len(mem)} nets", None if (miss or not got) else max(got) - min(got), lim, miss))
+            out.append(Relation(label, kind, f"spread of {len(mem)} nets", None if (miss or not got) else max(got) - min(got), lim, miss, mem))
         elif kind == "between":
             a, b = _sel(universe, r["a"]), _sel(universe, r["b"])
             miss = [x for x in a + b if x not in lengths]
             val = None if (miss or not a or not b) else mean(a) - mean(b)
-            out.append(Relation(label, kind, f"mean({', '.join(a)}) vs mean({', '.join(b)})", val, lim, miss))
+            out.append(Relation(label, kind, f"mean({', '.join(a)}) vs mean({', '.join(b)})", val, lim, miss, a + b))
         else:
             raise ValueError(f"unknown rule type {kind!r}")
     return out
