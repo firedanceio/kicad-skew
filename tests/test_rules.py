@@ -45,3 +45,20 @@ def test_board_nets_old_and_new_formats(tmp_path):
 def test_unknown_rule_type():
     with pytest.raises(ValueError):
         evaluate({"rules": [{"type": "nope", "max": 1}]}, L, NETS)
+
+
+def test_board_nets_unescapes_backslashes(tmp_path):
+    # KiCad writes the net A10\AP as "A10\\AP"; kicad-cli reports it as A10\AP
+    p = tmp_path / "b.kicad_pcb"
+    p.write_text('(kicad_pcb (net 1 "A10\\\\AP") (segment (net "A12\\\\~{BC}")))')
+    assert board_nets(str(p)) == ["A10\\AP", "A12\\~{BC}"]
+
+
+def test_unshared_ignores_same_layer_length_difference():
+    from kicad_skew.layers import unshared
+    # both legs on In9, one 2.2 mm longer there (made up on a skipped outer layer): not a layer split
+    assert unshared({"In9.Cu": 71.7}, {"In9.Cu": 73.9}) == 0.0
+    # legs on different inner layers: all of the shorter leg is unshared
+    assert unshared({"In2.Cu": 40.0}, {"In5.Cu": 41.0}) == 40.0
+    # a 3 mm section of one leg on another layer
+    assert abs(unshared({"In2.Cu": 37.0, "In5.Cu": 3.0}, {"In2.Cu": 40.0}) - 3.0) < 1e-9

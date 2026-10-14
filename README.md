@@ -32,6 +32,37 @@ the amber pair is DQS1, whose legs differ by 0.24 mm (80 % of the 12 mil limit):
 
 ![kicad-skew map of the Antmicro LPDDR4 channel](docs/antmicro-lpddr4-skew.png)
 
+## Example: a 72-bit DDR4 channel
+
+[Antmicro's DDR4 RDIMM tester](https://github.com/antmicro/data-center-dram-tester) (Apache-2.0; commit e7c85eb): a
+12-layer Kintex-7 board that drives a registered DDR4 module, 64 data bits plus 8 check bits, each nibble with its
+own strobe. The rules in `examples/antmicro-ddr4-rdimm-tester.json` hold every nibble to 1 mm of its strobe
+(DQS0-8 for the lower nibbles, DQS9-17 for the upper), command and address to 1 mm of CK0, and every pair to 12 mil:
+
+```bash
+git clone https://github.com/antmicro/data-center-dram-tester
+kicad-skew data-center-dram-tester/data-center-rdimm-ddr4-tester.kicad_pcb examples/antmicro-ddr4-rdimm-tester.json --layers --map skew.png
+```
+
+```
+measured 136 nets (KiCad lengths: tracks + via barrels between the layers used)
+  P/N                  worst DQS10_P vs DQS10_N: -0.077 mm (25 % of 0.305)
+  DQS0                 worst DQ3 vs mean(DQS0_N, DQS0_P): +0.019 mm (2 % of 1.000)
+  DQS9                 worst DQ4 vs mean(DQS9_N, DQS9_P): +0.057 mm (6 % of 1.000)
+  ...
+  DQS17                worst CB5 vs mean(DQS17_N, DQS17_P): +0.056 mm (6 % of 1.000)
+  CA vs CK0            worst BG1 vs mean(CK0_N, CK0_P): +0.029 mm (3 % of 1.000)
+PASS: 0 of 116 relations out of tolerance; 0 pairs split across layers
+```
+
+Every one of the 116 relations is inside 6 % of its limit: no nibble is more than 0.06 mm from its strobe. These
+numbers include the FPGA's package. Antmicro entered each pin's package length on the board (KiCad's pad-to-die
+length, 9.6 to 25.7 mm here), and KiCad adds it to every length it reports. On this board KiCad's length is the
+track length, plus the package length, plus 0.5 to 2.9 mm for the two vias on each net (the board is 1.74 mm
+thick), so nothing else is hiding in it. Matching on track length alone would have been off by up to 16 mm.
+
+![kicad-skew map of the Antmicro DDR4 tester's memory channel](docs/antmicro-ddr4-tester-skew.png)
+
 ## Why we wrote it
 
 KiCad's own DRC skew rules only check the spread inside a group. On an LPDDR4 layout we also had to check DQ against
@@ -91,6 +122,10 @@ time-domain check; `--layers` tells you where that applies.
 
 The example limits in `examples/lpddr4-rockchip.json` come from Rockchip's RK3568 high-speed PCB guide. Check your
 own SoC's guide.
+
+## Validation
+
+What we tested before release, on which boards, and what it turned up: [VALIDATION.md](VALIDATION.md).
 
 ## License
 

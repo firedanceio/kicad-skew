@@ -24,15 +24,22 @@ def per_layer(board_path: str, nets: set[str], skip_layers: tuple[str, ...] = ()
     return out
 
 
+def unshared(p: dict[str, float], n: dict[str, float]) -> float:
+    """mm of the shorter leg that has no partner on the same layer. A length difference on a shared layer (one leg
+    meandered more, or made up on a skipped outer layer) is not counted: that is a skew question, not a layer one."""
+    shared = sum(min(p.get(L, 0.0), n.get(L, 0.0)) for L in set(p) | set(n))
+    return max(0.0, min(sum(p.values()), sum(n.values())) - shared)
+
+
 def split_pairs(board_path: str, pairs: list[tuple[str, str]], threshold: float = 1.0,
                 skip_layers: tuple[str, ...] = ("F.Cu", "B.Cu")) -> list[tuple[str, str, float, dict, dict]]:
-    """[(p, n, mm not shared, p per layer, n per layer)] for pairs whose legs differ by more than ``threshold`` mm.
-    Outer layers are skipped by default: that is where breakout stubs live."""
+    """[(p, n, mm not shared, p per layer, n per layer)] for pairs with more than ``threshold`` mm of leg routed
+    without its partner on the same layer. Outer layers are skipped by default: that is where breakout stubs live."""
     pl = per_layer(board_path, {x for p in pairs for x in p}, skip_layers)
     res = []
     for p, n in pairs:
-        lays = set(pl.get(p, {})) | set(pl.get(n, {}))
-        diff = sum(abs(pl.get(p, {}).get(L, 0.0) - pl.get(n, {}).get(L, 0.0)) for L in lays) / 2
+        lp, ln = dict(pl.get(p, {})), dict(pl.get(n, {}))
+        diff = unshared(lp, ln)
         if diff > threshold:
-            res.append((p, n, diff, dict(pl.get(p, {})), dict(pl.get(n, {}))))
+            res.append((p, n, diff, lp, ln))
     return res

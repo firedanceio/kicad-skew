@@ -1,0 +1,246 @@
+{
+ "_comment": "Antmicro data-center-dram-tester (github.com/antmicro/data-center-dram-tester), DDR4 x4 RDIMM, 72 bits. DQ nibbles held to 1 mm of their strobe (DQS0-8 lower nibbles, DQS9-17 upper), command/address to 1 mm of CK0, pairs to 12 mil. Example limits: check your FPGA's memory guide.",
+ "measure": [
+  "DQ*",
+  "CB*",
+  "CK0_*",
+  "CK1_*",
+  "A*",
+  "BA*",
+  "BG*",
+  "PARITY",
+  "CKE0",
+  "ODT0",
+  "~{ACT}",
+  "~{CS0}"
+ ],
+ "exclude": [
+  "AUX*",
+  "AV*"
+ ],
+ "rules": [
+  {
+   "type": "pairs",
+   "label": "P/N",
+   "match": "^(CK[01]|DQS\\d+)_P$",
+   "p": "_P",
+   "n": "_N",
+   "max": 0.3048
+  },
+  {
+   "type": "group",
+   "label": "DQS0",
+   "members": [
+    "^DQ(0|1|2|3)$"
+   ],
+   "reference": [
+    "^DQS0_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS9",
+   "members": [
+    "^DQ(4|5|6|7)$"
+   ],
+   "reference": [
+    "^DQS9_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS1",
+   "members": [
+    "^DQ(8|9|10|11)$"
+   ],
+   "reference": [
+    "^DQS1_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS10",
+   "members": [
+    "^DQ(12|13|14|15)$"
+   ],
+   "reference": [
+    "^DQS10_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS2",
+   "members": [
+    "^DQ(16|17|18|19)$"
+   ],
+   "reference": [
+    "^DQS2_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS11",
+   "members": [
+    "^DQ(20|21|22|23)$"
+   ],
+   "reference": [
+    "^DQS11_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS3",
+   "members": [
+    "^DQ(24|25|26|27)$"
+   ],
+   "reference": [
+    "^DQS3_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS12",
+   "members": [
+    "^DQ(28|29|30|31)$"
+   ],
+   "reference": [
+    "^DQS12_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS4",
+   "members": [
+    "^DQ(32|33|34|35)$"
+   ],
+   "reference": [
+    "^DQS4_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS13",
+   "members": [
+    "^DQ(36|37|38|39)$"
+   ],
+   "reference": [
+    "^DQS13_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS5",
+   "members": [
+    "^DQ(40|41|42|43)$"
+   ],
+   "reference": [
+    "^DQS5_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS14",
+   "members": [
+    "^DQ(44|45|46|47)$"
+   ],
+   "reference": [
+    "^DQS14_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS6",
+   "members": [
+    "^DQ(48|49|50|51)$"
+   ],
+   "reference": [
+    "^DQS6_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS15",
+   "members": [
+    "^DQ(52|53|54|55)$"
+   ],
+   "reference": [
+    "^DQS15_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS7",
+   "members": [
+    "^DQ(56|57|58|59)$"
+   ],
+   "reference": [
+    "^DQS7_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS16",
+   "members": [
+    "^DQ(60|61|62|63)$"
+   ],
+   "reference": [
+    "^DQS16_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS8",
+   "members": [
+    "^CB[0-3]$"
+   ],
+   "reference": [
+    "^DQS8_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "DQS17",
+   "members": [
+    "^CB[4-7]$"
+   ],
+   "reference": [
+    "^DQS17_[PN]$"
+   ],
+   "max": 1.0
+  },
+  {
+   "type": "group",
+   "label": "CA vs CK0",
+   "members": [
+    "^A\\d",
+    "^B[AG]\\d$",
+    "^PARITY$",
+    "^CKE0$",
+    "^ODT0$",
+    "^~\\{ACT\\}$",
+    "^~\\{CS0\\}$"
+   ],
+   "reference": [
+    "^CK0_[PN]$"
+   ],
+   "max": 1.0
+  }
+ ]
+}
