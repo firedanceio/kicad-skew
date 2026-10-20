@@ -8,3 +8,6 @@
 - The layer check counts only copper a leg runs without its partner on the same layer. A length difference on a
   shared layer (made up on a skipped outer layer, say) was being reported as a split pair.
 - Example rules and a worked example for Antmicro's 72-bit DDR4 RDIMM tester.
+- `--layers` without KiCad's `pcbnew` module (a plain pip install, say) now ends with "layer check skipped" and the
+  reason, instead of "0 pairs split across layers". The JSON output says whether the layer check ran
+  (`layer_check`).

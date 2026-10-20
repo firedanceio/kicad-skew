@@ -44,12 +44,14 @@ def main(argv: list[str] | None = None) -> int:
         val = "missing " + ", ".join(r.missing) if r.value is None else f"{r.value:+.3f} mm (limit {r.limit:.3f})"
         print(f"{tag} [{r.rule}] {r.what}: {val}")
     split = []
+    layers_skipped = None           # why --layers could not run; the summary must not read as "0 pairs split"
     if a.layers:
         try:
             from .layers import split_pairs
             split = split_pairs(a.board, pair_nets(cfg, board_nets(a.board)), a.layer_threshold)
-        except ImportError:
-            print("layer check skipped: needs KiCad's pcbnew module (run with KiCad's Python)")
+        except ImportError as e:
+            layers_skipped = "needs KiCad's pcbnew module, run with KiCad's Python"
+            print(f"layer check skipped: {layers_skipped} ({e})")
         for p, n, d, lp, ln in split:
             fmt = lambda m: " ".join(f"{k}:{v:.1f}" for k, v in sorted(m.items()))
             print(f"SPLIT {p} / {n}: {d:.1f} mm on different layers  ({fmt(lp)} | {fmt(ln)})")
@@ -60,9 +62,15 @@ def main(argv: list[str] | None = None) -> int:
         except ImportError as e:
             print(f"map skipped: {e}")
     status = "FAIL" if fails or split else "PASS"
-    print(f"{status}: {len(fails)} of {len(rels)} relations out of tolerance" + (f"; {len(split)} pairs split across layers" if a.layers else ""))
+    summary = f"{status}: {len(fails)} of {len(rels)} relations out of tolerance"
+    if layers_skipped:
+        summary += f"; layer check skipped ({layers_skipped})"
+    elif a.layers:
+        summary += f"; {len(split)} pairs split across layers"
+    print(summary)
     if a.json:
-        json.dump({"lengths": L, "relations": [dict(r.__dict__, ok=r.ok) for r in rels],
+        layer_check = "skipped: " + layers_skipped if layers_skipped else "ran" if a.layers else "not requested"
+        json.dump({"lengths": L, "relations": [dict(r.__dict__, ok=r.ok) for r in rels], "layer_check": layer_check,
                    "split_pairs": [{"p": p, "n": n, "unshared_mm": d, "p_layers": lp, "n_layers": ln} for p, n, d, lp, ln in split]},
                   open(a.json, "w"), indent=1)
     return 1 if fails or split else 0
