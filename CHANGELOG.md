@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## 0.1.0 (2026-10-28)
 - First release: KiCad-native routed lengths through kicad-cli, JSON rules (pairs, group vs reference, spread,
   between), missing/unrouted nets fail, pair layer-parity report, JSON output, `--map` board view. Example rules for LPDDR4 and USB 2.0, and for Antmicro's open-source LPDDR4 test board.
 - Net names with a backslash (e.g. `A10\AP`) are matched: names read from the board file are unescaped the way KiCad
