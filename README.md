@@ -55,8 +55,8 @@ measured 136 nets (KiCad lengths: tracks + via barrels between the layers used)
 PASS: 0 of 116 relations out of tolerance; 0 pairs split across layers
 ```
 
-Every one of the 116 relations is inside 6 % of its limit: no nibble is more than 0.06 mm from its strobe. These
-numbers include the FPGA's package. Antmicro entered each pin's package length on the board (KiCad's pad-to-die
+Every nibble and the command/address group is inside 6 % of its limit: no nibble is more than 0.06 mm from its
+strobe. The worst pair is at 25 %: DQS10's legs differ by 0.077 mm against the 12 mil limit. These numbers include the FPGA's package. Antmicro entered each pin's package length on the board (KiCad's pad-to-die
 length, 9.6 to 25.7 mm here), and KiCad adds it to every length it reports. On this board KiCad's length is the
 track length, plus the package length, plus 0.5 to 2.9 mm for the two vias on each net (the board is 1.74 mm
 thick), so nothing else is hiding in it. Matching on track length alone would have been off by up to 16 mm.
